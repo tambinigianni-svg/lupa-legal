@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "▶ Iniciar Lupa Legal (página web)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "📅 Calculadora de plazos en consola (como la EC1)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/plazos.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "🔍 Probar reglas en consola (contrato de ejemplo)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/probar_reglas.py",
+      "args": [
+        "ejemplos/contrato_de_arrendamiento.txt"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "⚖️ Probar reglas en consola (casación)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/probar_reglas.py",
+      "args": [
+        "ejemplos/casacion_penal.txt"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
+}
