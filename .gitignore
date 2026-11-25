@@ -1,0 +1,13 @@
+# Entorno virtual de Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secretos: la clave de API nunca se sube al repositorio
+.env
+
+# Registros locales de consultas a la IA
+registros/
+
+# Archivos del sistema
+.DS_Store
