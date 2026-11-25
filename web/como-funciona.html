@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lupa Legal · Cómo funciona</title>
+  <meta name="description" content="Metodología, arquitectura, reglas, cálculo de plazos, OCR y controles de IA de Lupa Legal.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <a class="marca" href="index.html">
+      <span class="logo" aria-hidden="true">🔍</span>
+      <span><strong>Lupa Legal</strong><small>Revisión de documentos y plazos · Legal Tech</small></span>
+    </a>
+    <nav>
+      <a href="index.html">Analizador</a>
+      <a href="plazos.html">Calculadora de plazos</a>
+      <a href="como-funciona.html" class="activo">Cómo funciona</a>
+      <span id="estado-ia" class="estado-ia">IA: verificando…</span>
+    </nav>
+  </header>
+
+  <div class="portada">
+    <div class="contenedor">
+      <h1>Cómo funciona Lupa Legal</h1>
+      <p>Del problema jurídico al algoritmo: cómo se diseñó la herramienta, qué revisa, cómo calcula plazos, cómo usa la IA de forma responsable y cuáles son sus límites.</p>
+    </div>
+  </div>
+
+  <div class="contenido">
+    <section class="tarjeta">
+      <h2>⚖️ El problema jurídico</h2>
+      <p>Un abogado recibe a diario contratos, resoluciones, casaciones y escritos, muchas veces <strong>fotocopiados</strong>. En cada uno debe detectar lo importante (cláusulas abusivas, la decisión del juez, mandatos con apercibimiento) y, sobre todo, <strong>no perder un plazo</strong>: un recurso presentado un día tarde se declara improcedente.</p>
+      <p><strong>Objetivo:</strong> una página web que lea el documento (aunque sea un PDF escaneado), señale lo que requiere revisión, identifique los recursos que proceden y calcule el vencimiento exacto. La herramienta <em>apoya</em> al profesional; no lo reemplaza.</p>
+      <p><strong>Origen:</strong> parte de nuestra EC1 (consulta de plazos penales en consola) y la convierte en una herramienta web completa.</p>
+    </section>
+
+    <section class="tarjeta">
+      <h2>🧠 Pensamiento computacional aplicado</h2>
+      <div class="cuatro">
+        <div><h4>1. Descomponer</h4><p>Leer el archivo → reconocer el tipo de documento → buscar alertas → verificar elementos esenciales → extraer ficha y plazos → calcular vencimientos.</p></div>
+        <div><h4>2. Reconocer patrones</h4><p>Las cláusulas abusivas y las decisiones judiciales usan frases repetidas: “no será responsable”, “de manera unilateral”, “declararon improcedente”, “bajo apercibimiento”.</p></div>
+        <div><h4>3. Abstraer</h4><p>Cada regla y cada recurso son un registro (diccionario) con nombre, nivel o plazo y base legal. Un día es hábil o no: verdadero o falso.</p></div>
+        <div><h4>4. Algoritmo</h4><p>Normalizar texto → recorrer reglas → ubicar sección → calcular índice. Para plazos: notificación → primer día → sumar días hábiles → vencimiento.</p></div>
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <h2>🔀 Flujo del proceso</h2>
+      <pre class="mermaid">
+flowchart TD
+    A([Inicio]) --> B[/Usuario sube PDF, Word, foto o pega texto/]
+    B --> C{¿El PDF tiene texto?}
+    C -- Sí --> D[Extraer texto con pypdf]
+    C -- No: fotocopia --> E[OCR en el navegador con Tesseract]
+    D --> F[Normalizar texto]
+    E --> F
+    F --> G{¿Qué tipo de documento es?}
+    G -- Contrato --> H1[14 reglas de cláusulas riesgosas]
+    G -- Resolución o casación --> H2[10 reglas judiciales + ficha + recursos]
+    G -- Escrito o demanda --> H3[Requisitos de admisibilidad]
+    H1 --> I[Índice de atención 0-100]
+    H2 --> I
+    H3 --> I
+    I --> J[/Alertas, texto resaltado, checklist/]
+    H2 --> K[Calculadora de plazos]
+    K --> L[/Inicio, vencimiento y días restantes/]
+    J --> M{¿Segunda opinión IA?}
+    M -- Sí --> N[Anonimizar datos] --> O[Claude con plantilla de prompt] --> P[/Hallazgos, acciones con plazo y validación/]
+    M -- No --> Z([Revisión humana])
+    P --> Z
+    L --> Z
+      </pre>
+    </section>
+
+    <section class="tarjeta">
+      <h2>🏗️ Arquitectura (frontend y backend)</h2>
+      <pre class="mermaid">
+flowchart LR
+    subgraph Navegador [Frontend: HTML + CSS + JavaScript]
+      UI[Páginas de Lupa Legal]
+      OCR[OCR: pdf.js + Tesseract]
+    end
+    subgraph Servidor [Backend: Python + Flask]
+      API[app.py]
+      EX[extraccion.py]
+      R[reglas.py + tipos_documento.py]
+      PL[plazos.py]
+      AN[anonimizador.py]
+      IA[asistente_ia.py]
+      LOG[(registros/consultas_ia.csv)]
+    end
+    UI -- HTTP / JSON --> API
+    API --> EX
+    API --> R
+    API --> PL
+    API --> AN
+    API --> IA
+    IA --> LOG
+    IA --> CL{Claude}
+    CL --> CC[Sesión de Claude Code]
+    CL --> AK[API con clave]
+      </pre>
+    </section>
+
+    <section class="tarjeta">
+      <h2>📅 Cálculo de plazos (de la EC1 a la web)</h2>
+      <p>Se reutilizan las funciones de la EC1 (<code>es_dia_habil</code>, <code>sumar_dias_habiles</code>, la lista de feriados y la regla de notificación) y se mejoran:</p>
+      <div class="tabla-scroll"><table>
+        <thead><tr><th>EC1 (consola)</th><th>Lupa Legal (web)</th></tr></thead>
+        <tbody>
+          <tr><td>Solo recursos penales</td><td>Penal, civil, laboral, constitucional e investigación fiscal (19 plazos)</td></tr>
+          <tr><td>Feriados 2026</td><td>Feriados 2026 y 2027 con nombre, y días inhábiles adicionales</td></tr>
+          <tr><td>Muestra solo la fecha final</td><td>Calendario y detalle día por día de cómo se contó</td></tr>
+          <tr><td>Plazos en meses como días (240, 1080)</td><td>Meses calendario reales</td></tr>
+          <tr><td>—</td><td>Estado frente a hoy (vencido, vence hoy, días restantes) y archivo .ics para el calendario</td></tr>
+        </tbody>
+      </table></div>
+      <pre class="codigo">Notificación física      → el plazo corre desde el día hábil siguiente
+Notificación electrónica → surte efectos el 2.º día hábil; el plazo corre desde el 3.º
+Vencimiento              = primer día + (plazo − 1) días hábiles</pre>
+    </section>
+
+    <section class="tarjeta">
+      <h2>📋 Reglas que se revisan</h2>
+      <p>Las reglas son públicas. Están guardadas como <em>listas de diccionarios</em> (la misma estructura de la EC1) en <code>reglas.py</code> y <code>tipos_documento.py</code>.</p>
+      <div id="tablas-reglas">Cargando…</div>
+    </section>
+
+    <section class="tarjeta">
+      <h2>📄 Lectura de PDF escaneados (OCR)</h2>
+      <p>Si el PDF tiene texto, se extrae en el servidor con <strong>pypdf</strong> (la misma librería del ejemplo <code>05-unir-pdfs.py</code> del repositorio del curso). Si es una fotocopia, cada página se convierte en imagen con <strong>pdf.js</strong> y se lee con <strong>Tesseract</strong> (OCR en español). El OCR corre <strong>dentro del navegador</strong>, así que el documento no se envía a un servicio externo. El OCR puede cometer errores de lectura: siempre se debe revisar el texto obtenido.</p>
+    </section>
+
+    <section class="tarjeta">
+      <h2>🤖 Uso responsable de la IA</h2>
+      <p>Lupa Legal se conecta con Claude de dos formas: con la <strong>sesión de Claude Code</strong> ya iniciada en la computadora (sin clave), o con una <strong>clave de API</strong>. En ambos casos Claude <strong>no tiene herramientas</strong>: no puede abrir archivos, navegar ni ejecutar programas; solo lee el texto y responde.</p>
+      <div class="cuatro">
+        <div><h4>Plantilla de prompt</h4><p>Rol, alcance, criterios por tipo de documento, formato y limitaciones. Versionada (v2.0) para poder auditarla.</p></div>
+        <div><h4>Salida estructurada</h4><p>JSON con esquema fijo: sección, cita textual, riesgo, problema, recomendación, fundamento y acciones con plazo.</p></div>
+        <div><h4>La IA no calcula fechas</h4><p>Las fechas las calcula Python. El chatbot recibe el resultado de la calculadora y debe usarlo tal cual.</p></div>
+        <div><h4>Confidencialidad</h4><p>Se ocultan DNI, RUC, correos, teléfonos y cuentas. El OCR es local.</p></div>
+        <div><h4>Trazabilidad</h4><p>Cada consulta se registra (fecha, proveedor, modelo, tokens, resultado) sin guardar el documento.</p></div>
+        <div><h4>Supervisión humana</h4><p>Toda respuesta lleva advertencia. La IA confirma o descarta alertas, pero decide el abogado.</p></div>
+      </div>
+      <details style="margin-top:12px">
+        <summary><strong>Ver la plantilla de prompt de análisis</strong> <span id="version"></span></summary>
+        <pre class="codigo" id="prompt"></pre>
+      </details>
+      <details style="margin-top:8px">
+        <summary><strong>Ver la plantilla de prompt del chatbot</strong></summary>
+        <pre class="codigo" id="prompt-chat"></pre>
+      </details>
+    </section>
+
+    <section class="tarjeta">
+      <h2>🚧 Limitaciones</h2>
+      <ul>
+        <li>Las reglas buscan <em>palabras y frases</em>: pueden dar falsos positivos o no detectar una redacción inusual.</li>
+        <li>El OCR puede leer mal letras o números en fotocopias de baja calidad.</li>
+        <li>La detección de instancia y de recursos es orientativa; el abogado debe confirmar el recurso procedente.</li>
+        <li>Los plazos no consideran feriados locales, días no laborables decretados ni suspensiones si no se agregan manualmente.</li>
+        <li>La IA puede equivocarse o citar normas de forma imprecisa; por eso se exige verificación.</li>
+      </ul>
+    </section>
+
+    <section class="tarjeta">
+      <h2>💡 Postura Derecho–Tecnología</h2>
+      <p>La tecnología no reemplaza el criterio jurídico: lo <strong>amplifica</strong>. Lo que exige exactitud (contar días hábiles) se resuelve con <strong>código verificable</strong>; lo que exige comprensión (el sentido de una cláusula o de una decisión) se apoya en la <strong>IA</strong>, con controles de confidencialidad, trazabilidad y revisión humana. Así se revisa más rápido sin renunciar a la responsabilidad profesional.</p>
+    </section>
+  </div>
+
+  <footer>Lupa Legal · prototipo académico · Legal Tech DER 614 · 2026-2</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <script src="comun.js"></script>
+  <script>
+    if (window.mermaid) mermaid.initialize({ startOnLoad: true, theme: "neutral", flowchart: { useMaxWidth: true } });
+
+    pedirJSON("/api/reglas").then((datos) => {
+      $("tablas-reglas").innerHTML = Object.values(datos.tipos).map((t) => `
+        <h3>${escaparHTML(t.nombre)} (${t.reglas.length} reglas)</h3>
+        <div class="tabla-scroll"><table>
+          <thead><tr><th>ID</th><th>Qué se revisa</th><th>Nivel</th><th>Referencia orientativa</th></tr></thead>
+          <tbody>${t.reglas.map((r) => `<tr><td>${r.id}</td><td><strong>${escaparHTML(r.titulo)}</strong><br><small>${escaparHTML(r.recomendacion)}</small></td>
+            <td><span class="insignia ${r.nivel}-bg">${r.nivel}</span></td><td>${escaparHTML(r.base_legal)}</td></tr>`).join("")}</tbody>
+        </table></div>
+        <p><strong>Elementos esenciales verificados:</strong> ${t.esenciales.map(escaparHTML).join(" · ")}</p>`).join("");
+      $("prompt").textContent = datos.prompt_analisis;
+      $("prompt-chat").textContent = datos.prompt_chat;
+      $("version").textContent = "(" + datos.version_plantilla + ")";
+    }).catch(() => { $("tablas-reglas").textContent = "Inicia el servidor (python app.py) para ver las reglas."; });
+  </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lupa Legal · Calculadora de plazos</title>
+  <meta name="description" content="Calcula el inicio y vencimiento de plazos procesales en días hábiles, con feriados y notificación física o electrónica.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <a class="marca" href="index.html">
+      <span class="logo" aria-hidden="true">🔍</span>
+      <span><strong>Lupa Legal</strong><small>Revisión de documentos y plazos · Legal Tech</small></span>
+    </a>
+    <nav>
+      <a href="index.html">Analizador</a>
+      <a href="plazos.html" class="activo">Calculadora de plazos</a>
+      <a href="como-funciona.html">Cómo funciona</a>
+      <span id="estado-ia" class="estado-ia">IA: verificando…</span>
+    </nav>
+  </header>
+
+  <div class="portada">
+    <div class="contenedor">
+      <h1>Calculadora de plazos procesales</h1>
+      <p>La evolución de nuestra EC1: elige el recurso, la fecha de notificación y el tipo de notificación. Lupa Legal cuenta solo días hábiles, salta sábados, domingos y feriados, y te muestra día por día cómo llegó al vencimiento.</p>
+      <div class="pasos-mini">
+        <span>① Entrada: recurso + fecha + notificación</span>
+        <span>② Proceso: días hábiles y feriados</span>
+        <span>③ Salida: inicio, vencimiento y días restantes</span>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="rejilla">
+      <section class="tarjeta pegajosa columna-entrada" aria-labelledby="titulo-datos">
+        <h2 id="titulo-datos"><span class="num">1</span> Datos del plazo</h2>
+        <form class="formulario-plazo" id="form-plazo">
+          <div>
+            <label for="materia">Materia</label>
+            <select id="materia"></select>
+          </div>
+          <div>
+            <label for="recurso">Recurso o plazo</label>
+            <select id="recurso"></select>
+            <small id="base-legal" class="legal" style="color:#5b6478"></small>
+          </div>
+          <div id="caja-manual" hidden>
+            <label for="plazo-manual">Plazo en días hábiles</label>
+            <input type="number" id="plazo-manual" min="1" max="365" value="5">
+          </div>
+          <div>
+            <label for="fecha" id="etiqueta-fecha">Fecha de notificación</label>
+            <input type="date" id="fecha" required>
+          </div>
+          <div id="caja-notificacion">
+            <label>Tipo de notificación</label>
+            <div class="radios">
+              <label><input type="radio" name="notificacion" value="fisica" checked> 📬 Física (cédula)</label>
+              <label><input type="radio" name="notificacion" value="electronica"> 💻 Electrónica (casilla)</label>
+            </div>
+          </div>
+          <div>
+            <label for="inhabil-fecha">Días inhábiles adicionales <small style="font-weight:400">(suspensión de labores, huelga, feriado local)</small></label>
+            <div class="inhabiles">
+              <input type="date" id="inhabil-fecha">
+              <input type="text" id="inhabil-motivo" placeholder="Motivo (opcional)" maxlength="60">
+              <button class="boton claro pequeno" type="button" id="agregar-inhabil">+ Agregar</button>
+            </div>
+            <div class="etiquetas-inhabiles" id="lista-inhabiles"></div>
+          </div>
+          <button class="boton primario" type="submit">📅 Calcular plazo</button>
+        </form>
+      </section>
+
+      <div>
+        <section class="tarjeta" aria-labelledby="titulo-resultado-plazo">
+          <div class="ia-cabecera">
+            <h2 id="titulo-resultado-plazo"><span class="num">2</span> Resultado</h2>
+            <div class="chips no-imprimir" id="acciones-plazo" hidden>
+              <button class="boton claro pequeno" type="button" id="descargar-ics">🗓️ Agregar a mi calendario</button>
+              <button class="boton claro pequeno" type="button" id="preguntar-ia">💬 Preguntar a Lupa</button>
+              <button class="boton claro pequeno" type="button" onclick="window.print()">⬇️ PDF</button>
+            </div>
+          </div>
+          <div id="resultado-plazo">
+            <div class="vacio"><div class="icono">📅</div><h3>Completa los datos y presiona Calcular</h3>
+              <p>Ejemplo de la EC1: <strong>Penal → Recurso de casación</strong>, notificación física el <strong>24/07/2026</strong> (justo antes de Fiestas Patrias).
+              <br><button class="boton claro pequeno" type="button" id="ejemplo-ec1" style="margin-top:8px">Probar el ejemplo</button></p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <strong>Aviso:</strong> cálculo referencial. Verifica la norma vigente, reglas especiales del caso, días no laborables decretados
+    y feriados locales o judiciales. La responsabilidad del cómputo es del abogado.
+  </footer>
+
+  <script>window.SUGERENCIAS_CHAT = ["Explícame este cálculo", "¿Qué pasa si se me vence el plazo?", "¿Desde cuándo surte efectos la notificación electrónica?", "¿Qué requisitos tiene este recurso?"];</script>
+  <script src="comun.js"></script>
+  <script src="plazos.js"></script>
+</body>
+</html>

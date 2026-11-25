@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lupa Legal · Analizador de documentos jurídicos</title>
+  <meta name="description" content="Analiza contratos, resoluciones, casaciones y escritos; señala lo que requiere revisión y calcula plazos procesales.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <a class="marca" href="index.html">
+      <span class="logo" aria-hidden="true">🔍</span>
+      <span><strong>Lupa Legal</strong><small>Revisión de documentos y plazos · Legal Tech</small></span>
+    </a>
+    <nav>
+      <a href="index.html" class="activo">Analizador</a>
+      <a href="plazos.html">Calculadora de plazos</a>
+      <a href="como-funciona.html">Cómo funciona</a>
+      <span id="estado-ia" class="estado-ia" title="Estado del asistente de IA">IA: verificando…</span>
+    </nav>
+  </header>
+
+  <div class="portada">
+    <div class="contenedor">
+      <h1>Revisa un documento jurídico en segundos</h1>
+      <p>Sube un <strong>contrato, resolución, casación o escrito</strong> en PDF (incluso fotocopiado), Word o texto. Lupa Legal señala lo que requiere revisión, identifica la decisión y los recursos que proceden, y calcula los plazos. Además puedes pedirle una segunda opinión a la IA.</p>
+      <div class="pasos-mini">
+        <span>① Entrada: PDF, Word, foto o texto</span>
+        <span>② Proceso: reglas + plazos + IA</span>
+        <span>③ Salida: alertas, ficha y vencimientos</span>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="rejilla">
+      <!-- ================= COLUMNA 1: ENTRADA ================= -->
+      <section class="tarjeta columna-entrada pegajosa" aria-labelledby="titulo-entrada">
+        <h2 id="titulo-entrada"><span class="num">1</span> Documento</h2>
+
+        <label class="zona-archivo" id="zona-archivo" for="archivo">
+          <input type="file" id="archivo" accept=".pdf,.docx,.txt,.jpg,.jpeg,.png,.webp" hidden>
+          <span class="icono">📄</span>
+          <span><strong>Sube o arrastra un archivo</strong><br><small>PDF (también escaneado), Word, TXT o foto</small></span>
+        </label>
+        <div id="progreso" class="progreso" hidden>
+          <div class="progreso-texto" id="progreso-texto">Procesando…</div>
+          <div class="barra-progreso"><div id="barra-progreso"></div></div>
+        </div>
+
+        <div class="barra">
+          <select id="selector-ejemplo" aria-label="Cargar un documento de ejemplo">
+            <option value="">📚 O carga un ejemplo…</option>
+          </select>
+          <select id="tipo-documento" aria-label="Tipo de documento" title="Tipo de documento">
+            <option value="auto">🔎 Tipo: detectar automáticamente</option>
+            <option value="contrato">📝 Contrato</option>
+            <option value="resolucion">⚖️ Resolución judicial / casación</option>
+            <option value="escrito">📨 Escrito o demanda</option>
+          </select>
+        </div>
+
+        <textarea id="contrato" placeholder="…o pega aquí el texto del documento" spellcheck="false"></textarea>
+        <div class="contador"><span id="contador">0 palabras · 0 caracteres</span> <span id="origen-texto"></span>
+          <button class="boton claro pequeno" id="limpiar" type="button" style="float:right">Limpiar</button></div>
+
+        <label class="opcion">
+          <input type="checkbox" id="anonimizar" checked>
+          <span><strong>Ocultar datos personales antes de enviarlos a la IA</strong> (DNI, RUC, correos, teléfonos, cuentas).
+            <button type="button" id="ver-anonimo">Ver qué se enviaría</button></span>
+        </label>
+
+        <div class="acciones">
+          <button class="boton primario" id="analizar" type="button">🔍 Analizar documento</button>
+          <button class="boton secundario" id="analizar-ia" type="button">🤖 Segunda opinión IA</button>
+        </div>
+      </section>
+
+      <!-- ================= COLUMNA 2: RESULTADOS ================= -->
+      <div>
+        <section class="tarjeta" aria-labelledby="titulo-resultado">
+          <div class="ia-cabecera">
+            <h2 id="titulo-resultado"><span class="num">2</span> Resultado del análisis por reglas</h2>
+            <button class="boton claro pequeno no-imprimir" id="imprimir" type="button" hidden>⬇️ Descargar informe (PDF)</button>
+          </div>
+
+          <div id="vacio" class="vacio">
+            <div class="icono">⚖️</div>
+            <h3>Aún no hay análisis</h3>
+            <p>Sube un archivo, carga un ejemplo o pega un texto y presiona <strong>Analizar documento</strong>.</p>
+          </div>
+
+          <div id="resultado" hidden>
+            <div class="resumen">
+              <div class="medidor" aria-label="Índice de atención">
+                <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true">
+                  <circle cx="75" cy="75" r="62" fill="none" stroke="#e2e6ef" stroke-width="14"/>
+                  <circle id="arco" cx="75" cy="75" r="62" fill="none" stroke="#2b7bd6" stroke-width="14"
+                          stroke-linecap="round" stroke-dasharray="389.6" stroke-dashoffset="389.6"
+                          style="transition: stroke-dashoffset .8s ease, stroke .3s"/>
+                </svg>
+                <div class="valor"><div><b id="indice">0</b><small>índice de atención</small></div></div>
+              </div>
+              <div>
+                <div class="chips" style="margin-bottom:8px"><span id="etiqueta-tipo" class="chip"></span><span id="etiqueta-materia" class="chip"></span></div>
+                <span id="etiqueta-riesgo" class="etiqueta-riesgo">Riesgo</span>
+                <p id="frase-riesgo" style="margin:0 0 10px"></p>
+                <div class="chips" id="conteos"></div>
+              </div>
+            </div>
+
+            <div class="pestanas" role="tablist">
+              <button class="activo" data-panel="panel-alertas" role="tab">⚠️ Alertas</button>
+              <button data-panel="panel-ficha" role="tab">📋 Ficha y plazos</button>
+              <button data-panel="panel-texto" role="tab">🖍️ Texto resaltado</button>
+              <button data-panel="panel-checklist" role="tab">✅ Elementos esenciales</button>
+              <button data-panel="panel-datos" role="tab">📌 Datos clave</button>
+            </div>
+
+            <div id="panel-alertas" class="panel activo">
+              <div class="chips no-imprimir" id="filtros" style="margin-bottom:12px">
+                <button class="chip activo" data-nivel="todos">Todas</button>
+                <button class="chip" data-nivel="alto">Alto</button>
+                <button class="chip" data-nivel="medio">Medio</button>
+                <button class="chip" data-nivel="bajo">Bajo</button>
+              </div>
+              <div id="lista-alertas"></div>
+            </div>
+
+            <div id="panel-ficha" class="panel"><div id="ficha"></div></div>
+
+            <div id="panel-texto" class="panel">
+              <div class="leyenda">
+                <span><mark class="alto">alto</mark></span>
+                <span><mark class="medio">medio</mark></span>
+                <span><mark class="bajo">bajo</mark></span>
+                <span><mark class="vacio">por completar</mark></span>
+              </div>
+              <div id="texto-resaltado" class="texto-resaltado"></div>
+            </div>
+
+            <div id="panel-checklist" class="panel">
+              <ul class="lista-check" id="lista-esenciales"></ul>
+              <p id="campos-vacios" class="aviso" hidden></p>
+            </div>
+
+            <div id="panel-datos" class="panel">
+              <div class="datos" id="datos-clave"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SEGUNDA OPINIÓN IA ================= -->
+        <section class="tarjeta seccion-ia" aria-labelledby="titulo-ia">
+          <div class="ia-cabecera">
+            <h2 id="titulo-ia"><span class="num">3</span> Segunda opinión con IA</h2>
+          </div>
+          <div id="ia-contenido">
+            <p class="vacio" style="padding:10px 0">La IA revisa el sentido del documento, confirma o descarta las alertas de las reglas, agrega hallazgos y señala las acciones con plazo. Presiona <strong>🤖 Segunda opinión IA</strong>.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <strong>Aviso:</strong> Lupa Legal es un prototipo académico (Legal Tech · DER 614 · 2026-2). Sus resultados son orientativos,
+    pueden contener errores y no reemplazan la revisión de un abogado. Verifica siempre la vigencia de las normas y los plazos.
+  </footer>
+
+  <script src="comun.js"></script>
+  <script src="ocr.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
