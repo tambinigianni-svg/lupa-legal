@@ -1,0 +1,35 @@
+CONTRATO DE LOCACIÓN DE SERVICIOS PROFESIONALES
+
+Conste por el presente documento el contrato de locación de servicios que celebran, de una parte, SOLUCIONES DIGITALES ANDINAS S.A.C., con RUC N° 20601234567, con domicilio en Calle Los Laureles 455, Miraflores, Lima, representada por su apoderada Ana María Quispe Huamán, identificada con DNI N° 41236547, en adelante LA EMPRESA; y, de la otra parte, el señor Diego Salazar Paredes, identificado con DNI N° 72589641, con domicilio en Av. Arequipa 2100, Lince, Lima, en adelante EL LOCADOR.
+
+CLÁUSULA PRIMERA: OBJETO
+EL LOCADOR se obliga a prestar a LA EMPRESA servicios profesionales de desarrollo y mantenimiento de software para su plataforma de comercio electrónico, de acuerdo con el plan de trabajo que forma parte del presente contrato como Anexo 1.
+
+CLÁUSULA SEGUNDA: PLAZO
+El plazo del presente contrato es de seis (6) meses, contados a partir del 15 de enero de 2027. Cualquier prórroga deberá constar por escrito y estar firmada por ambas partes.
+
+CLÁUSULA TERCERA: RETRIBUCIÓN Y FORMA DE PAGO
+LA EMPRESA pagará a EL LOCADOR una retribución mensual de S/ 6,500.00 (seis mil quinientos y 00/100 soles), previa emisión del recibo por honorarios correspondiente. El pago se realizará dentro de los diez (10) días hábiles siguientes a la presentación del informe mensual de actividades.
+
+CLÁUSULA CUARTA: AUTONOMÍA
+EL LOCADOR prestará sus servicios con autonomía técnica, sin sujeción a horario ni subordinación, utilizando sus propios equipos.
+
+CLÁUSULA QUINTA: CONFIDENCIALIDAD
+EL LOCADOR guardará reserva sobre la información de LA EMPRESA a la que tenga acceso. Esta obligación se mantendrá de manera indefinida, incluso después de terminado el contrato.
+
+CLÁUSULA SEXTA: PROPIEDAD INTELECTUAL
+Los derechos patrimoniales sobre el software desarrollado en ejecución del presente contrato corresponderán a LA EMPRESA, conforme a la legislación de derecho de autor vigente.
+
+CLÁUSULA SÉPTIMA: EXCLUSIVIDAD
+Durante la vigencia del contrato y por un (1) año posterior a su término, EL LOCADOR no podrá prestar servicios a empresas competidoras de LA EMPRESA en el territorio nacional.
+
+CLÁUSULA OCTAVA: PENALIDADES
+En caso de retraso injustificado en la entrega de los avances del plan de trabajo, EL LOCADOR pagará una penalidad equivalente al 1% de la retribución mensual por cada día de retraso, con un tope máximo del 10% de dicha retribución.
+
+CLÁUSULA NOVENA: RESOLUCIÓN
+Cualquiera de las partes podrá resolver el contrato por incumplimiento de la otra, previo requerimiento por escrito otorgando un plazo de quince (15) días para subsanar, conforme al artículo 1429 del Código Civil.
+
+CLÁUSULA DÉCIMA: SOLUCIÓN DE CONTROVERSIAS
+Toda controversia derivada del presente contrato será resuelta mediante arbitraje de derecho, a cargo de un árbitro único, en el Centro de Arbitraje de la Cámara de Comercio de Lima.
+
+En señal de conformidad, las partes firman el presente contrato en Lima, el 10 de enero de 2027.
